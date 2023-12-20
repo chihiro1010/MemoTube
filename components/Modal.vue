@@ -261,7 +261,7 @@ export default {
 
       // www.youtube.com/watch?v=... 形式のURLを検索
       regex = /[?&]v=([^#\&\?]+)/;
-      const match = url.match(regex);
+      let match = url.match(regex);
 
       // youtu.be/... 形式のURLを検索
       if (!match || !match[1]) {
