@@ -1,13 +1,13 @@
 <template>
   <div
     v-if="!accordionOpen"
-    class="w-[23rem] h-24 my-2 bg-white rounded-xl shadow-md"
+    class="w-[22rem] h-20 my-2 bg-white rounded-xl shadow-md"
   >
     <img
       :src="data.thumbnailUrl"
-      class="mx-2 mt-3 h-[60px] w-[90px] inline-block"
+      class="mx-2 mt-2 h-[60px] w-[90px] inline-block rounded-md"
     />
-    <div class="inline-block w-64 align-middle">
+    <div class="inline-block w-60 align-middle">
       <p class="inline-block mt-2 ml-1">
         {{ data.title.slice(0, 17) }}
       </p>
@@ -15,7 +15,7 @@
         {{
           data.title.length < 34
             ? data.title.slice(17, 34)
-            : data.title.slice(17, 35) + "..."
+            : data.title.slice(17, 33) + "..."
         }}
       </p>
       <div>
@@ -42,13 +42,13 @@
   </div>
   <div
     v-else-if="accordionOpen"
-    class="w-[23rem] h-auto my-2 bg-white rounded-xl shadow-md"
+    class="w-[22rem] h-auto my-2 bg-white rounded-xl shadow-md"
   >
     <img
       :src="data.thumbnailUrl"
-      class="mx-2 mt-3 h-[60px] w-[90px] inline-block"
+      class="mx-2 mt-2 h-[60px] w-[90px] inline-block rounded-md"
     />
-    <div class="inline-block w-64 align-middle">
+    <div class="inline-block w-60 align-middle">
       <p class="inline-block mt-2 ml-1">
         {{ data.title.slice(0, 17) }}
       </p>
@@ -56,7 +56,7 @@
         {{
           data.title.length < 34
             ? data.title.slice(17, 34)
-            : data.title.slice(17, 35) + "..."
+            : data.title.slice(17, 33) + "..."
         }}
       </p>
       <div>

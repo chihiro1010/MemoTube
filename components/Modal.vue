@@ -1,13 +1,8 @@
 <template>
-  <div
-    v-if="progressState === 'URLInput'"
-    class="ease-out transition-all w-[23rem] ml-3"
-  >
-    <div class="bg-gray-600 rounded-xl shadow-sm">
-      <div class="p-4 sm:p-7">
-        <h2 class="block text-xl sm:text-2xl font-semibold text-gray-200">
-          動画URL入力
-        </h2>
+  <div v-if="progressState === 'URLInput'">
+    <div class="bg-gray-600 rounded-xl shadow-sm shrink-0 w-[22rem]">
+      <div class="p-4">
+        <h2 class="text-xl font-semibold text-gray-200">動画URL入力</h2>
 
         <div class="mt-7 mx-1">
           <input
@@ -43,12 +38,9 @@
       </div>
     </div>
   </div>
-  <div
-    v-else-if="progressState === 'inputIdError'"
-    class="ease-out transition-all w-[23rem] ml-3"
-  >
-    <div class="bg-gray-600 border rounded-xl shadow-sm">
-      <div class="p-4 sm:p-7">
+  <div v-else-if="progressState === 'inputIdError'">
+    <div class="bg-gray-600 border rounded-xl shadow-sm shrink-0 w-[22rem]">
+      <div class="p-4">
         <h2 class="block text-xl sm:text-2xl font-semibold text-red-500">
           URL認識エラー
         </h2>
@@ -71,12 +63,9 @@
       </div>
     </div>
   </div>
-  <div
-    v-else-if="progressState === 'videoIsNotFound'"
-    class="ease-out transition-all w-[23rem] ml-3"
-  >
-    <div class="bg-gray-600 border rounded-xl shadow-sm">
-      <div class="p-4 sm:p-7">
+  <div v-else-if="progressState === 'videoIsNotFound'">
+    <div class="bg-gray-600 border rounded-xl shadow-sm shrink-0 w-[22rem]">
+      <div class="p-4">
         <h2 class="block text-xl sm:text-2xl font-semibold text-red-500">
           動画情報取得エラー
         </h2>
@@ -99,22 +88,19 @@
       </div>
     </div>
   </div>
-  <div
-    v-else-if="progressState === 'createMemo'"
-    class="ease-out transition-all w-[23rem] ml-3"
-  >
-    <div class="bg-gray-600 border rounded-xl shadow-sm">
+  <div v-else-if="progressState === 'createMemo'">
+    <div class="bg-gray-600 border rounded-xl shadow-sm shrink-0 w-[22rem]">
       <div class="px-4 pt-4">
         <h2 class="block text-xl sm:text-2xl font-semibold text-white">
           メモの登録
         </h2>
 
-        <div class="w-96 h-24 mt-2 text-white">
+        <div class="w-[22rem] h-24 mt-2 text-white">
           <img
             :src="videoInfo.thumbnailUrl"
-            class="h-[63px] w-[100px] inline-block mt-3 mr-2"
+            class="h-[60px] w-[100px] inline-block mt-3 mr-2 rounded-md"
           />
-          <div class="inline-block w-64 align-middle text-sm">
+          <div class="inline-block w-60 align-middle text-sm">
             <p class="inline-block mt-2">
               {{ videoInfo.title.slice(0, 17) }}
             </p>

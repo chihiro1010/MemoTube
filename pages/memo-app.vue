@@ -10,7 +10,7 @@
     <div v-if="modalValid">
       <div class="fixed inset-0 bg-rose-500 opacity-20"></div>
       <Modal
-        class="fixed inset-x-0 inset-y-[30%]"
+        class="fixed flex inset-0 m-auto items-center justify-center"
         @onClose="modalToggle"
         @onSubmit="submitToLocalStorage"
       ></Modal>
