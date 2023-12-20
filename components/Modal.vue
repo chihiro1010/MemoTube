@@ -202,42 +202,42 @@ export default {
       this.$emit("onSubmit", this.videoInfo);
     },
     async getVideoInfo() {
-      let videoUrl = this.inputURL;
-      let videoId = this.getYouTubeVideoId(videoUrl);
+      const videoUrl = this.inputURL;
+      const videoId = this.getYouTubeVideoId(videoUrl);
 
       if (videoId) {
-        let apiKey = "AIzaSyAV0OGfw9dg8mEI_EVNP2wNrKlZ4Xfe1rs"; // ご自身のYouTube APIキーを使用してください
+        const apiKey = "AIzaSyAV0OGfw9dg8mEI_EVNP2wNrKlZ4Xfe1rs"; // ご自身のYouTube APIキーを使用してください
 
         // ビデオ情報を取得
-        let videoApiUrl =
+        const videoApiUrl =
           "https://www.googleapis.com/youtube/v3/videos?id=" +
           videoId +
           "&key=" +
           apiKey +
           "&part=snippet";
 
-        let videoResponse = await fetch(videoApiUrl);
-        let videoData = await videoResponse.json();
+        const videoResponse = await fetch(videoApiUrl);
+        const videoData = await videoResponse.json();
 
         if (videoData.items.length > 0) {
-          let snippet = videoData.items[0].snippet;
-          let channelId = snippet.channelId;
+          const snippet = videoData.items[0].snippet;
+          const channelId = snippet.channelId;
 
           // チャンネルの詳細な情報を取得
-          let channelApiUrl =
+          const channelApiUrl =
             "https://www.googleapis.com/youtube/v3/channels?id=" +
             channelId +
             "&key=" +
             apiKey +
             "&part=snippet";
 
-          let channelResponse = await fetch(channelApiUrl);
-          let channelData = await channelResponse.json();
+          const channelResponse = await fetch(channelApiUrl);
+          const channelData = await channelResponse.json();
 
           if (channelData.items.length > 0) {
-            let channelSnippet = channelData.items[0].snippet;
-            let channelTitle = channelSnippet.title;
-            let channelIconUrl = channelSnippet.thumbnails.default.url;
+            const channelSnippet = channelData.items[0].snippet;
+            const channelTitle = channelSnippet.title;
+            const channelIconUrl = channelSnippet.thumbnails.default.url;
 
             // ビデオ情報を保存するオブジェクトを作成
             this.videoInfo = {
@@ -261,7 +261,7 @@ export default {
 
       // www.youtube.com/watch?v=... 形式のURLを検索
       regex = /[?&]v=([^#\&\?]+)/;
-      let match = url.match(regex);
+      const match = url.match(regex);
 
       // youtu.be/... 形式のURLを検索
       if (!match || !match[1]) {

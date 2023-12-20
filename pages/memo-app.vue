@@ -6,16 +6,20 @@
       @onChange="changeTab"
       @onSubmit="submitToLocalStorage"
     ></Tab>
-    <Contents :isActive="isActive" :data-args="dataArgs"></Contents>
+    <Contents
+      :isActive="isActive"
+      :data-args="dataArgs"
+      @onDelete="deleteMemoData"
+    ></Contents>
     <div v-if="modalValid">
-      <div class="fixed inset-0 bg-rose-500 opacity-20"></div>
+      <div class="fixed inset-0 bg-rose-500 opacity-20 z-20"></div>
       <Modal
-        class="fixed flex inset-0 m-auto items-center justify-center"
+        class="fixed flex inset-0 m-auto items-center justify-center z-30"
         @onClose="modalToggle"
         @onSubmit="submitToLocalStorage"
       ></Modal>
     </div>
-    <FloatingButton @click="modalToggle"></FloatingButton>
+    <FloatingButton @click="modalToggle" class="z-10"></FloatingButton>
   </div>
 </template>
 
@@ -39,11 +43,24 @@ export default {
     submitToLocalStorage(videoInfo) {
       this.dataArgs.push(videoInfo);
 
-      var videoInfoString = JSON.stringify(this.dataArgs);
+      const videoInfoString = JSON.stringify(this.dataArgs);
 
       localStorage.setItem("videoInfo", videoInfoString);
 
       this.modalValid = false;
+
+      const dataArgs = JSON.parse(localStorage.getItem("videoInfo"));
+      this.dataArgs = dataArgs;
+    },
+    deleteMemoData(primary) {
+      const newDataArgs = this.dataArgs.filter(
+        (data) => data.submitDateTime !== primary
+      );
+
+      this.dataArgs = newDataArgs;
+
+      const videoInfoString = JSON.stringify(this.dataArgs);
+      localStorage.setItem("videoInfo", videoInfoString);
     },
     navigate() {
       navigateTo({
@@ -55,10 +72,10 @@ export default {
     // 全削除用
     // let tempData = [];
 
-    // var videoInfoString = JSON.stringify(tempData);
+    // const videoInfoString = JSON.stringify(tempData);
     // localStorage.setItem("videoInfo", videoInfoString);
 
-    let dataArgs = JSON.parse(localStorage.getItem("videoInfo"));
+    const dataArgs = JSON.parse(localStorage.getItem("videoInfo"));
     if (dataArgs !== null) this.dataArgs = dataArgs;
   },
 };

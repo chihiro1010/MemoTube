@@ -9,13 +9,13 @@
     />
     <div class="inline-block w-60 align-middle">
       <p class="inline-block mt-2 ml-1">
-        {{ data.title.slice(0, 17) }}
+        {{ data.title.slice(0, 16) }}
       </p>
       <p class="inline-block ml-1">
         {{
           data.title.length < 34
-            ? data.title.slice(17, 34)
-            : data.title.slice(17, 33) + "..."
+            ? data.title.slice(16, 32)
+            : data.title.slice(16, 31) + "..."
         }}
       </p>
       <div>
@@ -50,13 +50,13 @@
     />
     <div class="inline-block w-60 align-middle">
       <p class="inline-block mt-2 ml-1">
-        {{ data.title.slice(0, 17) }}
+        {{ data.title.slice(0, 16) }}
       </p>
       <p class="inline-block ml-1">
         {{
           data.title.length < 34
-            ? data.title.slice(17, 34)
-            : data.title.slice(17, 33) + "..."
+            ? data.title.slice(16, 32)
+            : data.title.slice(16, 31) + "..."
         }}
       </p>
       <div>
@@ -74,14 +74,14 @@
       </div>
     </div>
 
-    <p class="ml-4 mt-3">{{ data.memo }}</p>
-    <div class="relative h-10">
-      <!-- <img
+    <p class="ml-2 mt-3">{{ data.memo }}</p>
+    <div class="relative h-8">
+      <img
         src="../public/delete-icon.png"
         class="absolute left-2 bottom-[0.3rem] right-[0.5rem] text-left"
-        @click="accordionToggle"
+        @click="memoDelete(data.submitDateTime)"
       />
-      <img
+      <!-- <img
         src="../public/edit-icon.png"
         class="absolute left-[50%] bottom-[0.3rem] text-left translate-x-[-50%]"
         @click="accordionToggle"
@@ -104,6 +104,9 @@ export default {
     };
   },
   methods: {
+    memoDelete(primary) {
+      this.$emit("onDelete", primary);
+    },
     accordionToggle() {
       this.accordionOpen = !this.accordionOpen;
     },
