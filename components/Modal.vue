@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="progressState === 'URLInput'"
-    class="mt-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto"
+    class="ease-out transition-all w-[23rem] ml-3"
   >
     <div class="bg-gray-600 rounded-xl shadow-sm">
       <div class="p-4 sm:p-7">
@@ -45,7 +45,7 @@
   </div>
   <div
     v-else-if="progressState === 'inputIdError'"
-    class="mt-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto"
+    class="ease-out transition-all w-[23rem] ml-3"
   >
     <div class="bg-gray-600 border rounded-xl shadow-sm">
       <div class="p-4 sm:p-7">
@@ -73,7 +73,7 @@
   </div>
   <div
     v-else-if="progressState === 'videoIsNotFound'"
-    class="mt-0 ease-out transition-all sm:max-w-lg sm:w-full m-3 sm:mx-auto"
+    class="ease-out transition-all w-[23rem] ml-3"
   >
     <div class="bg-gray-600 border rounded-xl shadow-sm">
       <div class="p-4 sm:p-7">
@@ -101,7 +101,7 @@
   </div>
   <div
     v-else-if="progressState === 'createMemo'"
-    class="ease-out transition-all sm:max-w-lg sm:w-full mx-3 sm:mx-auto"
+    class="ease-out transition-all w-[23rem] ml-3"
   >
     <div class="bg-gray-600 border rounded-xl shadow-sm">
       <div class="px-4 pt-4">
@@ -116,17 +116,13 @@
           />
           <div class="inline-block w-64 align-middle text-sm">
             <p class="inline-block mt-2">
-              {{
-                videoInfo.title.length < 20
-                  ? videoInfo.title.slice(0, 20) + "..."
-                  : videoInfo.title.slice(0, 21)
-              }}
+              {{ videoInfo.title.slice(0, 17) }}
             </p>
             <p class="inline-block">
               {{
-                videoInfo.title.length < 42
-                  ? videoInfo.title.slice(21, 42)
-                  : videoInfo.title.slice(21, 41) + "..."
+                videoInfo.title.length < 34
+                  ? videoInfo.title.slice(17, 34)
+                  : videoInfo.title.slice(17, 35) + "..."
               }}
             </p>
             <div>
@@ -135,7 +131,11 @@
                 class="inline-block h-4 mt-1 mr-1 rounded-md"
               />
               <p class="inline-block align-middle">
-                {{ videoInfo.channelTitle.slice(0, 18) }}
+                {{
+                  videoInfo.channelTitle.length < 15
+                    ? videoInfo.channelTitle.slice(0, 15)
+                    : videoInfo.channelTitle.slice(0, 14) + "..."
+                }}
               </p>
             </div>
           </div>
