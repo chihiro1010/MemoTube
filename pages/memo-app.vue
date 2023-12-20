@@ -58,7 +58,8 @@ export default {
     // var videoInfoString = JSON.stringify(tempData);
     // localStorage.setItem("videoInfo", videoInfoString);
 
-    this.dataArgs = JSON.parse(localStorage.getItem("videoInfo"));
+    let dataArgs = JSON.parse(localStorage.getItem("videoInfo"));
+    if (dataArgs !== null) this.dataArgs = dataArgs;
   },
 };
 </script>
