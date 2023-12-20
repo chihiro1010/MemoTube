@@ -90,7 +90,6 @@ export default {
   methods: {
     accordionToggle() {
       this.accordionOpen = !this.accordionOpen;
-      console.log(this.accordionOpen);
     },
   },
   mounted() {},

@@ -197,6 +197,7 @@ export default {
         thumbnailUrl: "",
         channelIconUrl: "",
         memo: "",
+        submitDateTime: "",
       },
       progressState: "URLInput",
     };
@@ -210,8 +211,7 @@ export default {
     },
     submitMemo() {
       this.videoInfo.memo = this.inputMemo;
-      this.videoInfo.submitDateTime = new Date();
-      console.log(this.videoInfo.submitDateTime);
+      this.videoInfo.submitDateTime = new Date().toString();
 
       this.$emit("onSubmit", this.videoInfo);
     },
@@ -271,8 +271,18 @@ export default {
       }
     },
     getYouTubeVideoId(url) {
-      let regex = /[?&]v=([^#\&\?]+)/;
+      let regex;
+
+      // www.youtube.com/watch?v=... 形式のURLを検索
+      regex = /[?&]v=([^#\&\?]+)/;
       let match = url.match(regex);
+
+      // youtu.be/... 形式のURLを検索
+      if (!match || !match[1]) {
+        regex = /youtu\.be\/([^#\&\?]+)/;
+        match = url.match(regex);
+      }
+
       return match && match[1] ? match[1] : null;
     },
   },
