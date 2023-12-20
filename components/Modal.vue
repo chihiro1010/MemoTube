@@ -7,7 +7,7 @@
         <div class="mt-7 mx-1">
           <input
             type="text"
-            placeholder=" メモを追加したい動画のURLを貼り付けてください。"
+            placeholder=" メモを追加したい動画のURLを貼り付け"
             class="rounded-sm w-full"
             v-model="inputURL"
           />
@@ -130,7 +130,7 @@
 
       <div class="mx-4">
         <textarea
-          placeholder=" メモを入力。"
+          placeholder=" メモを入力(最大300文字)"
           class="rounded-sm w-full h-56"
           maxlength="300"
           v-model="inputMemo"
