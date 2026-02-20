@@ -11,10 +11,10 @@
       @onEdit="openEditDialog"
     ></Contents>
 
-    <div v-if="modalValid">
-      <div class="fixed inset-0 z-20 bg-slate-900/30 backdrop-blur-[1px]"></div>
+    <div v-if="modalValid" class="fixed inset-0 z-30 flex items-center justify-center px-4">
+      <div class="absolute inset-0 bg-slate-900/30 backdrop-blur-[1px]"></div>
       <Modal
-        class="fixed inset-0 z-30 m-auto flex items-center justify-center"
+        class="relative z-10"
         @onClose="modalToggle"
         @onSubmit="submitToLocalStorage"
       ></Modal>
