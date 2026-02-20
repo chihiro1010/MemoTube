@@ -1,7 +1,7 @@
 <template>
   <div
     v-if="progressState === 'URLInput'"
-    class="w-[min(92vw,28rem)] rounded-3xl border border-white/70 bg-white p-6 shadow-[0_25px_60px_rgba(15,23,42,0.25)]"
+    class="w-full max-w-md rounded-3xl border border-white/70 bg-white p-6 shadow-[0_25px_60px_rgba(15,23,42,0.25)]"
   >
     <h2 class="text-2xl font-bold text-slate-800">動画URL入力</h2>
     <p class="mt-2 text-sm leading-6 text-slate-600">
@@ -45,7 +45,7 @@
 
   <div
     v-else-if="progressState === 'inputIdError' || progressState === 'videoIsNotFound'"
-    class="w-[min(92vw,24rem)] rounded-3xl border border-red-200 bg-white p-6 shadow-[0_25px_60px_rgba(15,23,42,0.25)]"
+    class="w-full max-w-sm rounded-3xl border border-red-200 bg-white p-6 shadow-[0_25px_60px_rgba(15,23,42,0.25)]"
   >
     <h2 class="text-xl font-bold text-rose-500">
       {{ progressState === "inputIdError" ? "URL認識エラー" : "動画情報取得エラー" }}
@@ -66,7 +66,7 @@
 
   <div
     v-else-if="progressState === 'createMemo'"
-    class="max-h-[90vh] w-[min(92vw,28rem)] overflow-y-auto rounded-3xl border border-white/70 bg-white p-6 shadow-[0_25px_60px_rgba(15,23,42,0.25)]"
+    class="max-h-[90vh] w-full max-w-md overflow-y-auto rounded-3xl border border-white/70 bg-white p-6 shadow-[0_25px_60px_rgba(15,23,42,0.25)]"
   >
     <h2 class="text-2xl font-bold text-slate-800">メモの登録</h2>
 
