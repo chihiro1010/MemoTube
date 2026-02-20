@@ -1,19 +1,9 @@
 <template>
-  <div class="fixed right-6 bottom-6">
+  <div class="fixed bottom-6 right-6 z-20">
     <a
-      class="rounded-full bg-rose-500 h-20 w-20 pt-[0.2rem] font-bold text-white shadow-sm hover:bg-rose-400 text-6xl flex justify-center"
+      class="flex h-16 w-16 items-center justify-center rounded-2xl bg-gradient-to-br from-rose-400 to-pink-500 text-4xl font-light text-white shadow-[0_15px_35px_rgba(244,63,94,0.45)]"
     >
       +
     </a>
   </div>
 </template>
-
-<script>
-export default {
-  data() {
-    return {
-      data: "data",
-    };
-  },
-};
-</script>
