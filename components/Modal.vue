@@ -1,171 +1,101 @@
 <template>
-  <div v-if="progressState === 'URLInput'">
-    <div class="bg-gray-600 rounded-xl shadow-sm shrink-0 w-[22rem]">
-      <div class="p-4">
-        <h2 class="text-xl font-semibold text-gray-200">動画URL入力</h2>
+  <div class="w-[22rem] rounded-2xl border border-white/20 bg-slate-700 p-4 shadow-2xl" v-if="progressState === 'URLInput'">
+    <h2 class="text-xl font-semibold text-white">動画URL入力</h2>
+    <p class="mt-2 text-sm text-slate-200">YouTube動画のURLを入力すると、タイトルとチャンネル情報を取得します。</p>
 
-        <div class="mt-7 mx-1">
-          <input
-            type="text"
-            placeholder=" メモを追加したい動画のURLを貼り付け"
-            class="rounded-sm w-full"
-            v-model="inputURL"
-          />
-        </div>
-      </div>
+    <input
+      type="text"
+      placeholder="https://www.youtube.com/watch?v=..."
+      class="mt-4 w-full rounded-lg border border-slate-500 bg-slate-50 px-3 py-2 text-sm"
+      v-model="inputURL"
+    />
 
-      <div class="flex justify-end gap-x-2 p-4">
-        <button
-          type="button"
-          class="py-2 px-3 text-sm text-white font-semibold rounded-lg bg-gray-800 duration-75 hover:bg-gray-700"
-          @click="modalClose"
-        >
-          Cancel
-        </button>
-        <a
-          v-if="inputURL.length"
-          class="py-2 px-3 text-sm text-white font-semibold rounded-lg bg-rose-600 duration-75 hover:bg-rose-700"
-          @click="getVideoInfo"
-        >
-          OK
-        </a>
-        <a
-          v-else="!inputURL.length"
-          class="py-2 px-3 text-sm text-white font-semibold rounded-lg bg-gray-500 duration-75"
-        >
-          OK
-        </a>
-      </div>
+    <div class="mt-4 rounded-xl border border-amber-200/70 bg-amber-50 p-3 text-xs leading-5 text-amber-900">
+      <p class="font-semibold">保存先: ブラウザのローカルストレージ</p>
+      <p class="mt-1">
+        ブラウザの履歴・サイトデータ削除、シークレットモード終了、端末変更、ブラウザ初期化でメモが消える可能性があります。
+      </p>
+      <p class="mt-1">対策: 定期的にメモを別のノートやクラウドへバックアップしてください。</p>
+    </div>
+
+    <div class="mt-4 flex justify-end gap-x-2">
+      <button
+        type="button"
+        class="rounded-lg bg-slate-800 px-3 py-2 text-sm font-semibold text-white duration-75 hover:bg-slate-900"
+        @click="modalClose"
+      >
+        キャンセル
+      </button>
+      <button
+        type="button"
+        class="rounded-lg px-3 py-2 text-sm font-semibold text-white duration-75"
+        :class="inputURL.length ? 'bg-rose-600 hover:bg-rose-700' : 'bg-slate-500'"
+        :disabled="!inputURL.length"
+        @click="getVideoInfo"
+      >
+        次へ
+      </button>
     </div>
   </div>
-  <div v-else-if="progressState === 'inputIdError'">
-    <div class="bg-gray-600 border rounded-xl shadow-sm shrink-0 w-[22rem]">
-      <div class="p-4">
-        <h2 class="block text-xl sm:text-2xl font-semibold text-red-500">
-          URL認識エラー
-        </h2>
 
-        <div class="mt-7 mx-1">
-          <p class="text-white">
-            YoutubeのURLを確認できませんでした。URLを再度確認してください。
-          </p>
-        </div>
-      </div>
-
-      <div class="flex justify-end gap-x-2 p-4">
-        <button
-          type="button"
-          class="py-2 px-3 text-sm text-white font-semibold rounded-lg bg-gray-800 duration-75 hover:bg-gray-700"
-          @click="errorClose"
-        >
-          OK
-        </button>
-      </div>
+  <div v-else-if="progressState === 'inputIdError' || progressState === 'videoIsNotFound'" class="w-[22rem] rounded-2xl border border-red-200 bg-slate-700 p-4 shadow-2xl">
+    <h2 class="text-xl font-semibold text-red-400">{{ progressState === "inputIdError" ? "URL認識エラー" : "動画情報取得エラー" }}</h2>
+    <p class="mt-4 text-sm text-white">
+      {{ progressState === "inputIdError" ? "YouTubeのURLを確認できませんでした。URL形式を再確認してください。" : "入力したURLの動画情報が見つかりませんでした。URLを再確認してください。" }}
+    </p>
+    <div class="mt-4 flex justify-end">
+      <button
+        type="button"
+        class="rounded-lg bg-slate-800 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-900"
+        @click="errorClose"
+      >
+        OK
+      </button>
     </div>
   </div>
-  <div v-else-if="progressState === 'videoIsNotFound'">
-    <div class="bg-gray-600 border rounded-xl shadow-sm shrink-0 w-[22rem]">
-      <div class="p-4">
-        <h2 class="block text-xl sm:text-2xl font-semibold text-red-500">
-          動画情報取得エラー
-        </h2>
 
-        <div class="mt-7 mx-1">
-          <p class="text-white">
-            入力したURLに一致する動画が見つかりませんでした。動画URLを再度確認してください。
-          </p>
+  <div v-else-if="progressState === 'createMemo'" class="w-[22rem] rounded-2xl border border-white/20 bg-slate-700 p-4 shadow-2xl">
+    <h2 class="text-xl font-semibold text-white">メモの登録</h2>
+
+    <div class="mt-3 flex gap-2 rounded-xl bg-slate-800/50 p-2 text-white">
+      <img :src="videoInfo.thumbnailUrl" class="h-[60px] w-[100px] rounded-md object-cover" />
+      <div class="w-56 text-sm">
+        <p class="line-clamp-2">{{ videoInfo.title }}</p>
+        <div class="mt-1 flex items-center gap-1">
+          <img :src="videoInfo.channelIconUrl" class="h-4 rounded-full" />
+          <p class="line-clamp-1 text-xs text-slate-200">{{ videoInfo.channelTitle }}</p>
         </div>
-      </div>
-
-      <div class="flex justify-end gap-x-2 p-4">
-        <button
-          type="button"
-          class="py-2 px-3 text-sm text-white font-semibold rounded-lg bg-gray-800 duration-75 hover:bg-gray-700"
-          @click="errorClose"
-        >
-          OK
-        </button>
       </div>
     </div>
-  </div>
-  <div v-else-if="progressState === 'createMemo'">
-    <div class="bg-gray-600 border rounded-xl shadow-sm shrink-0 w-[22rem]">
-      <div class="px-4 pt-4">
-        <h2 class="block text-xl sm:text-2xl font-semibold text-white">
-          メモの登録
-        </h2>
 
-        <div class="w-[22rem] h-24 mt-2 text-white">
-          <img
-            :src="videoInfo.thumbnailUrl"
-            class="h-[60px] w-[100px] inline-block mt-3 mr-2 rounded-md"
-          />
-          <div class="inline-block w-60 align-middle text-sm">
-            <p class="inline-block mt-2">
-              {{ videoInfo.title.slice(0, 17) }}
-            </p>
-            <p class="inline-block">
-              {{
-                videoInfo.title.length < 34
-                  ? videoInfo.title.slice(17, 34)
-                  : videoInfo.title.slice(17, 35) + "..."
-              }}
-            </p>
-            <div>
-              <img
-                :src="videoInfo.channelIconUrl"
-                class="inline-block h-4 mt-1 mr-1 rounded-md"
-              />
-              <p class="inline-block align-middle">
-                {{
-                  videoInfo.channelTitle.length < 15
-                    ? videoInfo.channelTitle.slice(0, 15)
-                    : videoInfo.channelTitle.slice(0, 14) + "..."
-                }}
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
+    <div class="mt-3">
+      <textarea
+        placeholder="メモを入力(最大300文字)"
+        class="h-44 w-full rounded-lg border border-slate-500 px-2 py-1"
+        maxlength="300"
+        v-model="inputMemo"
+      ></textarea>
 
-      <div class="mx-4">
-        <textarea
-          placeholder=" メモを入力(最大300文字)"
-          class="rounded-sm w-full h-56"
-          maxlength="300"
-          v-model="inputMemo"
-        ></textarea>
+      <p class="text-sm font-semibold" :class="inputMemo.length < 300 ? 'text-slate-100' : 'text-red-400'">
+        {{ inputMemo.length < 300 ? `文字数: ${inputMemo.length}` : "文字数: 300(最大)" }}
+      </p>
+    </div>
 
-        <p
-          v-if="inputMemo.length < 300"
-          class="text-white font-semibold text-sm"
-        >
-          {{ "文字数: " + inputMemo.length }}
-        </p>
-        <p
-          v-else="inputMemo.length === 300"
-          class="text-red-500 font-semibold text-sm"
-        >
-          {{ "文字数: 300(最大)" }}
-        </p>
-      </div>
-
-      <div class="flex justify-end gap-x-2 p-4">
-        <button
-          type="button"
-          class="py-2 px-3 text-sm text-white font-semibold rounded-lg bg-gray-800 duration-75 hover:bg-gray-700"
-          @click="() => (this.progressState = 'URLInput')"
-        >
-          Cancel
-        </button>
-        <button
-          type="button"
-          class="py-2 px-3 text-sm text-white font-semibold rounded-lg bg-rose-600 duration-75 hover:bg-rose-700"
-          @click="submitMemo"
-        >
-          OK
-        </button>
-      </div>
+    <div class="mt-4 flex justify-end gap-x-2">
+      <button
+        type="button"
+        class="rounded-lg bg-slate-800 px-3 py-2 text-sm font-semibold text-white duration-75 hover:bg-slate-900"
+        @click="progressState = 'URLInput'"
+      >
+        戻る
+      </button>
+      <button
+        type="button"
+        class="rounded-lg bg-rose-600 px-3 py-2 text-sm font-semibold text-white duration-75 hover:bg-rose-700"
+        @click="submitMemo"
+      >
+        保存
+      </button>
     </div>
   </div>
 </template>
@@ -174,7 +104,6 @@
 export default {
   data() {
     return {
-      isActive: "all",
       inputURL: "",
       inputMemo: "",
       videoInfo: {
@@ -182,6 +111,8 @@ export default {
         channelTitle: "",
         thumbnailUrl: "",
         channelIconUrl: "",
+        channelUrl: "",
+        videoUrl: "",
         memo: "",
         submitDateTime: "",
       },
@@ -200,70 +131,59 @@ export default {
       this.videoInfo.submitDateTime = new Date().toString();
 
       this.$emit("onSubmit", this.videoInfo);
+      this.inputURL = "";
+      this.inputMemo = "";
+      this.progressState = "URLInput";
     },
     async getVideoInfo() {
-      const videoUrl = this.inputURL;
-      const videoId = this.getYouTubeVideoId(videoUrl);
+      const videoId = this.getYouTubeVideoId(this.inputURL);
 
-      if (videoId) {
-        const apiKey = "AIzaSyAV0OGfw9dg8mEI_EVNP2wNrKlZ4Xfe1rs"; // ご自身のYouTube APIキーを使用してください
-
-        // ビデオ情報を取得
-        const videoApiUrl =
-          "https://www.googleapis.com/youtube/v3/videos?id=" +
-          videoId +
-          "&key=" +
-          apiKey +
-          "&part=snippet";
-
-        const videoResponse = await fetch(videoApiUrl);
-        const videoData = await videoResponse.json();
-
-        if (videoData.items.length > 0) {
-          const snippet = videoData.items[0].snippet;
-          const channelId = snippet.channelId;
-
-          // チャンネルの詳細な情報を取得
-          const channelApiUrl =
-            "https://www.googleapis.com/youtube/v3/channels?id=" +
-            channelId +
-            "&key=" +
-            apiKey +
-            "&part=snippet";
-
-          const channelResponse = await fetch(channelApiUrl);
-          const channelData = await channelResponse.json();
-
-          if (channelData.items.length > 0) {
-            const channelSnippet = channelData.items[0].snippet;
-            const channelTitle = channelSnippet.title;
-            const channelIconUrl = channelSnippet.thumbnails.default.url;
-
-            // ビデオ情報を保存するオブジェクトを作成
-            this.videoInfo = {
-              title: snippet.title,
-              channelTitle: channelTitle,
-              thumbnailUrl: snippet.thumbnails.default.url,
-              channelIconUrl: channelIconUrl,
-              memo: "",
-            };
-          }
-          this.progressState = "createMemo";
-        } else {
-          this.progressState = "videoIsNotFound";
-        }
-      } else {
+      if (!videoId) {
         this.progressState = "inputIdError";
+        return;
       }
+
+      const apiKey = "AIzaSyAV0OGfw9dg8mEI_EVNP2wNrKlZ4Xfe1rs";
+      const videoApiUrl = `https://www.googleapis.com/youtube/v3/videos?id=${videoId}&key=${apiKey}&part=snippet`;
+
+      const videoResponse = await fetch(videoApiUrl);
+      const videoData = await videoResponse.json();
+
+      if (!videoData.items.length) {
+        this.progressState = "videoIsNotFound";
+        return;
+      }
+
+      const snippet = videoData.items[0].snippet;
+      const channelId = snippet.channelId;
+      const channelApiUrl = `https://www.googleapis.com/youtube/v3/channels?id=${channelId}&key=${apiKey}&part=snippet`;
+
+      const channelResponse = await fetch(channelApiUrl);
+      const channelData = await channelResponse.json();
+
+      if (!channelData.items.length) {
+        this.progressState = "videoIsNotFound";
+        return;
+      }
+
+      const channelSnippet = channelData.items[0].snippet;
+      this.videoInfo = {
+        title: snippet.title,
+        channelTitle: channelSnippet.title,
+        thumbnailUrl: snippet.thumbnails.default.url,
+        channelIconUrl: channelSnippet.thumbnails.default.url,
+        channelUrl: `https://www.youtube.com/channel/${channelId}`,
+        videoUrl: `https://www.youtube.com/watch?v=${videoId}`,
+        memo: "",
+        submitDateTime: "",
+      };
+
+      this.progressState = "createMemo";
     },
     getYouTubeVideoId(url) {
-      let regex;
-
-      // www.youtube.com/watch?v=... 形式のURLを検索
-      regex = /[?&]v=([^#\&\?]+)/;
+      let regex = /[?&]v=([^#\&\?]+)/;
       let match = url.match(regex);
 
-      // youtu.be/... 形式のURLを検索
       if (!match || !match[1]) {
         regex = /youtu\.be\/([^#\&\?]+)/;
         match = url.match(regex);
