@@ -1,98 +1,33 @@
 <template>
-  <div
-    v-if="!accordionOpen"
-    class="w-[22rem] h-20 my-2 bg-white rounded-xl shadow-md"
+  <article
+    class="my-2 w-full max-w-md overflow-hidden rounded-2xl border border-white/70 bg-white/90 shadow-[0_14px_40px_rgba(30,41,59,0.08)] backdrop-blur-sm"
   >
-    <img
-      :src="data.thumbnailUrl"
-      class="mx-2 mt-2 h-[60px] w-[90px] inline-block rounded-md"
-    />
-    <div class="inline-block w-60 align-middle">
-      <p class="inline-block mt-2 ml-1">
-        {{ data.title.slice(0, 16) }}
-      </p>
-      <p class="inline-block ml-1">
-        {{
-          data.title.length < 34
-            ? data.title.slice(16, 32)
-            : data.title.slice(16, 31) + "..."
-        }}
-      </p>
-      <div>
-        <img
-          :src="data.channelIconUrl"
-          class="inline-block h-5 mt-2 mr-1 rounded-md"
-        />
-        <p class="inline-block mt-2 align-middle">
-          {{
-            data.channelTitle.length < 15
-              ? data.channelTitle.slice(0, 15)
-              : data.channelTitle.slice(0, 14) + "..."
-          }}
-        </p>
+    <div class="flex gap-3 p-3">
+      <img :src="data.thumbnailUrl" class="h-16 w-24 rounded-lg object-cover" />
+      <div class="flex-1">
+        <p class="line-clamp-2 text-sm font-semibold text-slate-800">{{ data.title }}</p>
+        <div class="mt-2 flex items-center gap-1">
+          <img :src="data.channelIconUrl" class="h-5 w-5 rounded-full" />
+          <p class="text-xs text-slate-500">{{ data.channelTitle }}</p>
+        </div>
       </div>
-    </div>
-    <div class="text-right">
-      <img
-        src="../public/chevron-down-icon.png"
-        class="inline-block relative bottom-[1.2rem] right-[0.5rem]"
-        @click="accordionToggle"
-      />
-    </div>
-  </div>
-  <div
-    v-else-if="accordionOpen"
-    class="w-[22rem] h-auto my-2 bg-white rounded-xl shadow-md"
-  >
-    <img
-      :src="data.thumbnailUrl"
-      class="mx-2 mt-2 h-[60px] w-[90px] inline-block rounded-md"
-    />
-    <div class="inline-block w-60 align-middle">
-      <p class="inline-block mt-2 ml-1">
-        {{ data.title.slice(0, 16) }}
-      </p>
-      <p class="inline-block ml-1">
-        {{
-          data.title.length < 34
-            ? data.title.slice(16, 32)
-            : data.title.slice(16, 31) + "..."
-        }}
-      </p>
-      <div>
-        <img
-          :src="data.channelIconUrl"
-          class="inline-block h-5 mt-2 mr-1 rounded-md"
-        />
-        <p class="inline-block mt-2 align-middle">
-          {{
-            data.channelTitle.length < 15
-              ? data.channelTitle.slice(0, 15)
-              : data.channelTitle.slice(0, 14) + "..."
-          }}
-        </p>
-      </div>
+      <button class="px-1 text-slate-400" @click="accordionToggle">
+        {{ accordionOpen ? "⌃" : "⌄" }}
+      </button>
     </div>
 
-    <p class="ml-2 mt-3">{{ data.memo }}</p>
-    <div class="relative h-8">
-      <img
-        src="../public/delete-icon.png"
-        class="absolute left-2 bottom-[0.3rem] right-[0.5rem] text-left"
-        @click="memoDelete(data.submitDateTime)"
-      />
-      <!-- <img
-        src="../public/edit-icon.png"
-        class="absolute left-[50%] bottom-[0.3rem] text-left translate-x-[-50%]"
-        @click="accordionToggle"
-      /> -->
-      <img
-        src="../public/chevron-up-icon.png"
-        class="absolute bottom-[0.3rem] right-[0.5rem]"
-        @click="accordionToggle"
-      />
+    <div v-if="accordionOpen" class="border-t border-slate-100 px-3 pb-3">
+      <p class="mt-3 whitespace-pre-wrap text-sm text-slate-700">{{ data.memo }}</p>
+      <div class="mt-3 flex justify-end">
+        <button
+          class="rounded-lg bg-rose-50 px-3 py-1 text-xs font-semibold text-rose-500 duration-100 hover:bg-rose-100"
+          @click="memoDelete(data.submitDateTime)"
+        >
+          削除
+        </button>
+      </div>
     </div>
-  </div>
+  </article>
 </template>
 
 <script>
@@ -111,6 +46,5 @@ export default {
       this.accordionOpen = !this.accordionOpen;
     },
   },
-  mounted() {},
 };
 </script>

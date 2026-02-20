@@ -1,5 +1,7 @@
 <template>
-  <div class="h-screen bg-gray-100">
+  <div
+    class="min-h-screen bg-[radial-gradient(circle_at_top,_#ffe4ec_0%,_#f8fafc_45%,_#f1f5f9_100%)]"
+  >
     <Header @click="navigate"></Header>
     <Tab
       :isActive="isActive"
@@ -12,14 +14,14 @@
       @onDelete="deleteMemoData"
     ></Contents>
     <div v-if="modalValid">
-      <div class="fixed inset-0 bg-rose-500 opacity-20 z-20"></div>
+      <div class="fixed inset-0 z-20 bg-slate-900/30 backdrop-blur-[1px]"></div>
       <Modal
-        class="fixed flex inset-0 m-auto items-center justify-center z-30"
+        class="fixed inset-0 z-30 m-auto flex items-center justify-center"
         @onClose="modalToggle"
         @onSubmit="submitToLocalStorage"
       ></Modal>
     </div>
-    <FloatingButton @click="modalToggle" class="z-10"></FloatingButton>
+    <FloatingButton @click="modalToggle"></FloatingButton>
   </div>
 </template>
 
@@ -69,12 +71,6 @@ export default {
     },
   },
   mounted() {
-    // 全削除用
-    // let tempData = [];
-
-    // const videoInfoString = JSON.stringify(tempData);
-    // localStorage.setItem("videoInfo", videoInfoString);
-
     const dataArgs = JSON.parse(localStorage.getItem("videoInfo"));
     if (dataArgs !== null) this.dataArgs = dataArgs;
   },
