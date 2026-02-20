@@ -122,10 +122,52 @@ export default {
       if (dataArgs !== null) {
         this.dataArgs = dataArgs.map((item) => ({
           ...item,
-          videoUrl: item.videoUrl || "https://www.youtube.com/",
-          channelUrl: item.channelUrl || "https://www.youtube.com/",
+          videoUrl: this.normalizeVideoUrl(item),
+          channelUrl: this.normalizeChannelUrl(item),
         }));
       }
+    },
+    normalizeVideoUrl(item) {
+      if (item.videoUrl) {
+        try {
+          const parsed = new URL(item.videoUrl);
+          const hostname = parsed.hostname.replace("www.", "");
+          const isYouTubeHost = hostname === "youtube.com" || hostname === "youtu.be";
+
+          if (isYouTubeHost && item.videoUrl !== "https://www.youtube.com/") {
+            return item.videoUrl;
+          }
+        } catch (_error) {
+          return null;
+        }
+      }
+
+      if (item.videoId) {
+        return `https://www.youtube.com/watch?v=${item.videoId}`;
+      }
+
+      return null;
+    },
+    normalizeChannelUrl(item) {
+      if (item.channelUrl) {
+        try {
+          const parsed = new URL(item.channelUrl);
+          const hostname = parsed.hostname.replace("www.", "");
+          const isYouTubeHost = hostname === "youtube.com";
+
+          if (isYouTubeHost && item.channelUrl !== "https://www.youtube.com/") {
+            return item.channelUrl;
+          }
+        } catch (_error) {
+          return null;
+        }
+      }
+
+      if (item.channelId) {
+        return `https://www.youtube.com/channel/${item.channelId}`;
+      }
+
+      return null;
     },
   },
   mounted() {

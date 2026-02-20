@@ -4,6 +4,7 @@
   >
     <button class="flex w-full items-center gap-3" @click="accordionOpen = !accordionOpen">
       <a
+        v-if="channel.channelUrl"
         :href="channel.channelUrl"
         target="_blank"
         rel="noopener noreferrer"
@@ -12,6 +13,7 @@
       >
         <img :src="channel.channelIconUrl" class="h-12 w-12 rounded-full" />
       </a>
+      <img v-else :src="channel.channelIconUrl" class="h-12 w-12 rounded-full opacity-80" />
       <div class="flex-1 text-left">
         <p class="text-sm font-semibold text-slate-800">{{ channel.channelTitle }}</p>
         <p class="text-xs text-slate-500">{{ channel.memos.length }}件のメモ</p>
@@ -26,11 +28,13 @@
         class="rounded-xl bg-slate-50 p-2"
       >
         <div class="flex gap-2">
-          <a :href="memo.videoUrl" target="_blank" rel="noopener noreferrer" class="shrink-0">
+          <a v-if="memo.videoUrl" :href="memo.videoUrl" target="_blank" rel="noopener noreferrer" class="shrink-0">
             <img :src="memo.thumbnailUrl" class="h-12 w-20 rounded-md object-cover" />
           </a>
+          <img v-else :src="memo.thumbnailUrl" class="h-12 w-20 rounded-md object-cover opacity-80" />
           <div class="flex-1">
             <a
+              v-if="memo.videoUrl"
               :href="memo.videoUrl"
               target="_blank"
               rel="noopener noreferrer"
@@ -38,6 +42,7 @@
             >
               {{ memo.title }}
             </a>
+            <p v-else class="line-clamp-1 text-xs font-semibold text-slate-700">{{ memo.title }}</p>
             <p class="mt-1 line-clamp-2 text-xs text-slate-500">{{ memo.memo }}</p>
           </div>
         </div>

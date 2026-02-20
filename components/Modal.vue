@@ -1,35 +1,40 @@
 <template>
-  <div class="w-[22rem] rounded-2xl border border-white/20 bg-slate-700 p-4 shadow-2xl" v-if="progressState === 'URLInput'">
-    <h2 class="text-xl font-semibold text-white">動画URL入力</h2>
-    <p class="mt-2 text-sm text-slate-200">YouTube動画のURLを入力すると、タイトルとチャンネル情報を取得します。</p>
+  <div
+    v-if="progressState === 'URLInput'"
+    class="w-[min(92vw,28rem)] rounded-3xl border border-white/70 bg-white p-6 shadow-[0_25px_60px_rgba(15,23,42,0.25)]"
+  >
+    <h2 class="text-2xl font-bold text-slate-800">動画URL入力</h2>
+    <p class="mt-2 text-sm leading-6 text-slate-600">
+      YouTube動画のURLを入力すると、タイトルとチャンネル情報を取得します。
+    </p>
 
     <input
+      v-model.trim="inputURL"
       type="text"
       placeholder="https://www.youtube.com/watch?v=..."
-      class="mt-4 w-full rounded-lg border border-slate-500 bg-slate-50 px-3 py-2 text-sm"
-      v-model="inputURL"
+      class="mt-4 w-full rounded-xl border border-slate-300 bg-slate-50 px-4 py-3 text-sm text-slate-800 outline-none ring-rose-300 focus:ring"
     />
 
-    <div class="mt-4 rounded-xl border border-amber-200/70 bg-amber-50 p-3 text-xs leading-5 text-amber-900">
+    <div class="mt-4 rounded-2xl border border-amber-200 bg-amber-50 p-4 text-xs leading-5 text-amber-900">
       <p class="font-semibold">保存先: ブラウザのローカルストレージ</p>
       <p class="mt-1">
-        ブラウザの履歴・サイトデータ削除、シークレットモード終了、端末変更、ブラウザ初期化でメモが消える可能性があります。
+        履歴・サイトデータ削除、シークレットモード終了、端末変更、ブラウザ初期化でメモが消える可能性があります。
       </p>
       <p class="mt-1">対策: 定期的にメモを別のノートやクラウドへバックアップしてください。</p>
     </div>
 
-    <div class="mt-4 flex justify-end gap-x-2">
+    <div class="mt-6 flex justify-end gap-2">
       <button
         type="button"
-        class="rounded-lg bg-slate-800 px-3 py-2 text-sm font-semibold text-white duration-75 hover:bg-slate-900"
+        class="rounded-xl bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 duration-75 hover:bg-slate-300"
         @click="modalClose"
       >
         キャンセル
       </button>
       <button
         type="button"
-        class="rounded-lg px-3 py-2 text-sm font-semibold text-white duration-75"
-        :class="inputURL.length ? 'bg-rose-600 hover:bg-rose-700' : 'bg-slate-500'"
+        class="rounded-xl px-4 py-2 text-sm font-semibold text-white duration-75"
+        :class="inputURL.length ? 'bg-rose-500 hover:bg-rose-600' : 'bg-slate-400'"
         :disabled="!inputURL.length"
         @click="getVideoInfo"
       >
@@ -38,15 +43,20 @@
     </div>
   </div>
 
-  <div v-else-if="progressState === 'inputIdError' || progressState === 'videoIsNotFound'" class="w-[22rem] rounded-2xl border border-red-200 bg-slate-700 p-4 shadow-2xl">
-    <h2 class="text-xl font-semibold text-red-400">{{ progressState === "inputIdError" ? "URL認識エラー" : "動画情報取得エラー" }}</h2>
-    <p class="mt-4 text-sm text-white">
+  <div
+    v-else-if="progressState === 'inputIdError' || progressState === 'videoIsNotFound'"
+    class="w-[min(92vw,24rem)] rounded-3xl border border-red-200 bg-white p-6 shadow-[0_25px_60px_rgba(15,23,42,0.25)]"
+  >
+    <h2 class="text-xl font-bold text-rose-500">
+      {{ progressState === "inputIdError" ? "URL認識エラー" : "動画情報取得エラー" }}
+    </h2>
+    <p class="mt-3 text-sm leading-6 text-slate-700">
       {{ progressState === "inputIdError" ? "YouTubeのURLを確認できませんでした。URL形式を再確認してください。" : "入力したURLの動画情報が見つかりませんでした。URLを再確認してください。" }}
     </p>
-    <div class="mt-4 flex justify-end">
+    <div class="mt-5 flex justify-end">
       <button
         type="button"
-        class="rounded-lg bg-slate-800 px-3 py-2 text-sm font-semibold text-white hover:bg-slate-900"
+        class="rounded-xl bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 hover:bg-slate-300"
         @click="errorClose"
       >
         OK
@@ -54,44 +64,47 @@
     </div>
   </div>
 
-  <div v-else-if="progressState === 'createMemo'" class="w-[22rem] rounded-2xl border border-white/20 bg-slate-700 p-4 shadow-2xl">
-    <h2 class="text-xl font-semibold text-white">メモの登録</h2>
+  <div
+    v-else-if="progressState === 'createMemo'"
+    class="max-h-[90vh] w-[min(92vw,28rem)] overflow-y-auto rounded-3xl border border-white/70 bg-white p-6 shadow-[0_25px_60px_rgba(15,23,42,0.25)]"
+  >
+    <h2 class="text-2xl font-bold text-slate-800">メモの登録</h2>
 
-    <div class="mt-3 flex gap-2 rounded-xl bg-slate-800/50 p-2 text-white">
-      <img :src="videoInfo.thumbnailUrl" class="h-[60px] w-[100px] rounded-md object-cover" />
-      <div class="w-56 text-sm">
-        <p class="line-clamp-2">{{ videoInfo.title }}</p>
-        <div class="mt-1 flex items-center gap-1">
-          <img :src="videoInfo.channelIconUrl" class="h-4 rounded-full" />
-          <p class="line-clamp-1 text-xs text-slate-200">{{ videoInfo.channelTitle }}</p>
+    <div class="mt-4 flex gap-3 rounded-2xl bg-slate-100 p-3">
+      <img :src="videoInfo.thumbnailUrl" class="h-[68px] w-[112px] rounded-lg object-cover" />
+      <div class="min-w-0 text-sm text-slate-700">
+        <p class="line-clamp-2 font-semibold">{{ videoInfo.title }}</p>
+        <div class="mt-2 flex items-center gap-2">
+          <img :src="videoInfo.channelIconUrl" class="h-5 w-5 rounded-full" />
+          <p class="line-clamp-1 text-xs text-slate-500">{{ videoInfo.channelTitle }}</p>
         </div>
       </div>
     </div>
 
-    <div class="mt-3">
+    <div class="mt-4">
       <textarea
-        placeholder="メモを入力(最大300文字)"
-        class="h-44 w-full rounded-lg border border-slate-500 px-2 py-1"
-        maxlength="300"
         v-model="inputMemo"
+        placeholder="メモを入力(最大300文字)"
+        class="h-44 w-full rounded-xl border border-slate-300 px-3 py-2 text-sm text-slate-700 outline-none ring-rose-300 focus:ring"
+        maxlength="300"
       ></textarea>
 
-      <p class="text-sm font-semibold" :class="inputMemo.length < 300 ? 'text-slate-100' : 'text-red-400'">
-        {{ inputMemo.length < 300 ? `文字数: ${inputMemo.length}` : "文字数: 300(最大)" }}
+      <p class="mt-1 text-right text-xs font-semibold" :class="inputMemo.length < 300 ? 'text-slate-500' : 'text-rose-500'">
+        {{ inputMemo.length < 300 ? `${inputMemo.length}/300` : "300/300(最大)" }}
       </p>
     </div>
 
-    <div class="mt-4 flex justify-end gap-x-2">
+    <div class="mt-6 flex justify-end gap-2">
       <button
         type="button"
-        class="rounded-lg bg-slate-800 px-3 py-2 text-sm font-semibold text-white duration-75 hover:bg-slate-900"
+        class="rounded-xl bg-slate-200 px-4 py-2 text-sm font-semibold text-slate-700 duration-75 hover:bg-slate-300"
         @click="progressState = 'URLInput'"
       >
         戻る
       </button>
       <button
         type="button"
-        class="rounded-lg bg-rose-600 px-3 py-2 text-sm font-semibold text-white duration-75 hover:bg-rose-700"
+        class="rounded-xl bg-rose-500 px-4 py-2 text-sm font-semibold text-white duration-75 hover:bg-rose-600"
         @click="submitMemo"
       >
         保存
@@ -112,7 +125,9 @@ export default {
         thumbnailUrl: "",
         channelIconUrl: "",
         channelUrl: "",
+        channelId: "",
         videoUrl: "",
+        videoId: "",
         memo: "",
         submitDateTime: "",
       },
@@ -173,7 +188,9 @@ export default {
         thumbnailUrl: snippet.thumbnails.default.url,
         channelIconUrl: channelSnippet.thumbnails.default.url,
         channelUrl: `https://www.youtube.com/channel/${channelId}`,
+        channelId,
         videoUrl: `https://www.youtube.com/watch?v=${videoId}`,
+        videoId,
         memo: "",
         submitDateTime: "",
       };
@@ -181,15 +198,30 @@ export default {
       this.progressState = "createMemo";
     },
     getYouTubeVideoId(url) {
-      let regex = /[?&]v=([^#\&\?]+)/;
-      let match = url.match(regex);
+      try {
+        const parsedUrl = new URL(url);
+        const hostname = parsedUrl.hostname.replace("www.", "");
 
-      if (!match || !match[1]) {
-        regex = /youtu\.be\/([^#\&\?]+)/;
-        match = url.match(regex);
+        if (hostname === "youtube.com") {
+          const pathName = parsedUrl.pathname;
+
+          if (pathName === "/watch") {
+            return parsedUrl.searchParams.get("v");
+          }
+
+          if (pathName.startsWith("/shorts/") || pathName.startsWith("/live/") || pathName.startsWith("/embed/")) {
+            return pathName.split("/")[2] || null;
+          }
+        }
+
+        if (hostname === "youtu.be") {
+          return parsedUrl.pathname.replace("/", "") || null;
+        }
+      } catch (_error) {
+        return null;
       }
 
-      return match && match[1] ? match[1] : null;
+      return null;
     },
   },
 };
